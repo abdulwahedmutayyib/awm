@@ -1,0 +1,8 @@
+<calculator>
+  <operations>
+    <operation name="addition" symbol="+" function="add"/>
+    <operation name="subtraction" symbol="-" function="subtract"/>
+    <operation name="multiplication" symbol="*" function="multiply"/>
+    <operation name="division" symbol="/" function="divide"/>
+  </operations>
+</calculator>
