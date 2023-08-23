@@ -1,15 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="ComplexCalculatorTests" tests="3" errors="0" failures="1" skipped="0">
-    <testcase classname="ComplexCalculatorTest" name="testAddition" time="0.1"/>
-    <testcase classname="ComplexCalculatorTest" name="testSubtraction" time="0.1"/>
-    <testcase classname="ComplexCalculatorTest" name="testMultiplication" time="0.1">
-      <failure type="AssertionError">Multiplication result incorrect: Expected (2 + 3i), but got (6 + 4i)</failure>
-    </testcase>
+  <testsuite name="TestCalculatorFunctions" tests="2" errors="0" failures="0" skipped="0">
+    <testcase classname="TestCalculatorFunctions" name="test_add" time="0.001"/>
+    <testcase classname="TestCalculatorFunctions" name="test_subtract" time="0.001"/>
   </testsuite>
 </testsuites>
-
-
 
 
 
