@@ -1,3 +1,4 @@
+
 import math
 
 def add(x, y):
@@ -33,49 +34,21 @@ def cosine(x):
 def tangent(x):
     return math.tan(math.radians(x))
 
-while True:
-    print("Select operation:")
-    print("1. Add")
-    print("2. Subtract")
-    print("3. Multiply")
-    print("4. Divide")
-    print("5. Square Root")
-    print("6. Exponentiation")
-    print("7. Sine")
-    print("8. Cosine")
-    print("9. Tangent")
-    print("10. Exit")
+# Now, let's create a test case using the unittest framework
 
-    choice = input("Enter choice (1-10): ")
+import unittest
 
-    if choice == '10':
-        print("Calculator exiting...")
-        break
+class TestCalculatorFunctions(unittest.TestCase):
 
-    if choice in ['1', '2', '3', '4', '6', '7', '8', '9']:
-        num1 = float(input("Enter first number: "))
-    
-    if choice in ['1', '2', '3', '4', '6']:
-        num2 = float(input("Enter second number: "))
-    
-    if choice == '1':
-        print("Result:", add(num1, num2))
-    elif choice == '2':
-        print("Result:", subtract(num1, num2))
-    elif choice == '3':
-        print("Result:", multiply(num1, num2))
-    elif choice == '4':
-        print("Result:", divide(num1, num2))
-    elif choice == '5':
-        print("Result:", square_root(num1))
-    elif choice == '6':
-        print("Result:", exponentiation(num1, num2))
-    elif choice == '7':
-        print("Result:", sine(num1))
-    elif choice == '8':
-        print("Result:", cosine(num1))
-    elif choice == '9':
-        print("Result:", tangent(num1))
-    else:
-        print("Invalid input")
+    def test_add(self):
+        self.assertEqual(add(2, 3), 5)
+
+    def test_subtract(self):
+        self.assertEqual(subtract(5, 2), 3)
+
+    # Add more test methods for other functions
+
+if __name__ == '__main__':
+    unittest.main()
+
 
