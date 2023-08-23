@@ -1,25 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="ComplexCalculatorTests" tests="3" errors="0" failures="1" skipped="0">
+    <testcase classname="ComplexCalculatorTest" name="testAddition" time="0.1"/>
+    <testcase classname="ComplexCalculatorTest" name="testSubtraction" time="0.1"/>
+    <testcase classname="ComplexCalculatorTest" name="testMultiplication" time="0.1">
+      <failure type="AssertionError">Multiplication result incorrect: Expected (2 + 3i), but got (6 + 4i)</failure>
+    </testcase>
+  </testsuite>
+</testsuites>
 
 
 
 
 
-def add(x, y):
-    return x + y
-
-# ... other functions ...
-
-class TestCalculatorFunctions(unittest.TestCase):
-
-    def test_add(self):
-        self.assertEqual(add(2, 3), 5)
-
-    def test_subtract(self):
-        self.assertEqual(subtract(5, 2), 3)
-
-    # ... other test methods ...
-
-if __name__ == '__main__':
-    # Create a test suite
-    test_suite = unittest.TestLoader().loadTestsFromTestCase(TestCalculatorFunctions)
-    
-  
