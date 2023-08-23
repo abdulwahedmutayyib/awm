@@ -23,6 +23,4 @@ if __name__ == '__main__':
     # Create a test suite
     test_suite = unittest.TestLoader().loadTestsFromTestCase(TestCalculatorFunctions)
     
-    # Run the tests and generate JUnit XML report
-    runner = xmlrunner.XMLTestRunner(output='test-reports')
-    runner.run(test_suite)
+  
