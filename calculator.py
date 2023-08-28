@@ -50,5 +50,66 @@ class TestCalculatorFunctions(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+    import sys
+from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLineEdit
+
+class CalculatorApp(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle("Complex Calculator")
+        self.setGeometry(100, 100, 400, 300)
+
+        main_widget = QWidget(self)
+        self.setCentralWidget(main_widget)
+
+        layout = QVBoxLayout()
+        main_widget.setLayout(layout)
+
+        self.input_field = QLineEdit()
+        layout.addWidget(self.input_field)
+
+        button_layout = [
+            ["7", "8", "9", "+"],
+            ["4", "5", "6", "-"],
+            ["1", "2", "3", "*"],
+            ["0", ".", "=", "/"]
+        ]
+
+        for row in button_layout:
+            row_widget = QWidget()
+            row_layout = QHBoxLayout()
+            row_widget.setLayout(row_layout)
+
+            for label in row:
+                button = QPushButton(label)
+                button.clicked.connect(self.handle_button_click)
+                row_layout.addWidget(button)
+
+            layout.addWidget(row_widget)
+
+        self.current_input = ""
+
+    def handle_button_click(self):
+        clicked_button = self.sender()
+        clicked_text = clicked_button.text()
+
+        if clicked_text == "=":
+            try:
+                result = eval(self.current_input)
+                self.input_field.setText(str(result))
+                self.current_input = str(result)
+            except Exception as e:
+                self.input_field.setText("Error")
+        else:
+            self.current_input += clicked_text
+            self.input_field.setText(self.current_input)
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    calc_app = CalculatorApp()
+    calc_app.show()
+    sys.exit(app.exec_())
+
 
 
