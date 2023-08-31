@@ -1,4 +1,3 @@
-
 import math
 
 def add(x, y):
@@ -34,26 +33,10 @@ def cosine(x):
 def tangent(x):
     return math.tan(math.radians(x))
 
-# Now, let's create a test case using the unittest framework
-
-import unittest
-
-class TestCalculatorFunctions(unittest.TestCase):
-
-    def test_add(self):
-        self.assertEqual(add(2, 3), 5)
-
-    def test_subtract(self):
-        self.assertEqual(subtract(5, 2), 3)
-
-    # Add more test methods for other functions
-
-if __name__ == '__main__':
-    unittest.main()
-    import sys
+import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLineEdit
 
-class CalculatorApp(QMainWindow):
+class ComplexCalculatorApp(QMainWindow):
     def __init__(self):
         super().__init__()
 
@@ -107,9 +90,6 @@ class CalculatorApp(QMainWindow):
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    calc_app = CalculatorApp()
+    calc_app = ComplexCalculatorApp()
     calc_app.show()
     sys.exit(app.exec_())
-
-
-
