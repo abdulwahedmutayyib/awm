@@ -1,5 +1,4 @@
-import os
-os.environ['QT_QPA_PLATFORM'] = 'xcb'
+
 import math
 
 def add(x, y):
