@@ -34,63 +34,67 @@ def cosine(x):
 def tangent(x):
     return math.tan(math.radians(x))
 
-import sys
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLineEdit
+import tkinter as tk
+from tkinter import messagebox
+import math
 
-class ComplexCalculatorApp(QMainWindow):
-    def __init__(self):
-        super().__init__()
-
-        self.setWindowTitle("Complex Calculator")
-        self.setGeometry(100, 100, 400, 300)
-
-        main_widget = QWidget(self)
-        self.setCentralWidget(main_widget)
-
-        layout = QVBoxLayout()
-        main_widget.setLayout(layout)
-
-        self.input_field = QLineEdit()
-        layout.addWidget(self.input_field)
-
-        button_layout = [
-            ["7", "8", "9", "+"],
-            ["4", "5", "6", "-"],
-            ["1", "2", "3", "*"],
-            ["0", ".", "=", "/"]
-        ]
-
-        for row in button_layout:
-            row_widget = QWidget()
-            row_layout = QHBoxLayout()
-            row_widget.setLayout(row_layout)
-
-            for label in row:
-                button = QPushButton(label)
-                button.clicked.connect(self.handle_button_click)
-                row_layout.addWidget(button)
-
-            layout.addWidget(row_widget)
-
-        self.current_input = ""
-
-    def handle_button_click(self):
-        clicked_button = self.sender()
-        clicked_text = clicked_button.text()
-
-        if clicked_text == "=":
-            try:
-                result = eval(self.current_input)
-                self.input_field.setText(str(result))
-                self.current_input = str(result)
-            except Exception as e:
-                self.input_field.setText("Error")
+def calculate():
+    try:
+        x = float(entry_x.get())
+        y = float(entry_y.get())
+        operation = operation_var.get()
+        
+        if operation == "Add":
+            result = add(x, y)
+        elif operation == "Subtract":
+            result = subtract(x, y)
+        elif operation == "Multiply":
+            result = multiply(x, y)
+        elif operation == "Divide":
+            result = divide(x, y)
+        elif operation == "Square Root":
+            result = square_root(x)
+        elif operation == "Exponentiation":
+            result = exponentiation(x, y)
+        elif operation == "Sine":
+            result = sine(x)
+        elif operation == "Cosine":
+            result = cosine(x)
+        elif operation == "Tangent":
+            result = tangent(x)
         else:
-            self.current_input += clicked_text
-            self.input_field.setText(self.current_input)
+            result = "Invalid operation"
+        
+        result_label.config(text=f"Result: {result}")
+    except ValueError:
+        messagebox.showerror("Error", "Invalid input. Please enter valid numbers.")
 
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    calc_app = ComplexCalculatorApp()
-    calc_app.show()
-    sys.exit(app.exec_())
+# Create the main application window
+app = tk.Tk()
+app.title("Calculator")
+
+# Create input fields
+entry_x = tk.Entry(app, width=10)
+entry_y = tk.Entry(app, width=10)
+
+# Create operation dropdown
+operations = ["Add", "Subtract", "Multiply", "Divide", "Square Root", "Exponentiation", "Sine", "Cosine", "Tangent"]
+operation_var = tk.StringVar()
+operation_var.set(operations[0])  # Default operation
+operation_menu = tk.OptionMenu(app, operation_var, *operations)
+
+# Create calculate button
+calculate_button = tk.Button(app, text="Calculate", command=calculate)
+
+# Create result label
+result_label = tk.Label(app, text="Result: ")
+
+# Layout widgets
+entry_x.pack()
+entry_y.pack()
+operation_menu.pack()
+calculate_button.pack()
+result_label.pack()
+
+# Start the GUI main loop
+app.mainloop()
