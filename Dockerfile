@@ -1,5 +1,5 @@
 
-FROM ubuntu
+FROM Windows
 
 # Set the working directory to /app
 WORKDIR /app
