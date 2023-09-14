@@ -36,7 +36,7 @@ def cosine(x):
 def tangent(x):
     return math.tan(math.radians(x))
 
-import sys
+
 import math
 from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLineEdit, QLabel
 
