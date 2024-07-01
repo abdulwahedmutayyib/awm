@@ -1,23 +1,20 @@
-# Use an official Python runtime as a parent image
-FROM python:3.10
+# Use an official Python image as a base
+FROM python:latest
 
 # Set the working directory to /app
 WORKDIR /app
 
-# Install PyQt5 and X11 support (necessary for GUI applications)
-RUN apt-get update && apt-get install -y python3-pyqt5 && apt-get install -y libxcb-xinerama0
+# Copy the requirements file
+COPY requirements.txt .
 
-# Copy the current directory contents into the container at /app
-COPY . /app
+# Install the dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Install any needed packages specified in requirements.txt
-RUN pip install -r requirements.txt
+# Copy the application code
+COPY . .
 
-# Make port 80 available to the world outside this container
-EXPOSE 80
+# Expose the port
+EXPOSE 8000
 
-# Define environment variable
-ENV NAME World
-
-# Run app.py when the container launches
+# Run the command to start the app
 CMD ["python", "calculator.py"]
