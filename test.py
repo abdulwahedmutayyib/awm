@@ -1,20 +1,57 @@
-import unittest
-import xmlrunner
-import calculator  # Assuming you've saved your calculator code in a file named "calculator.py"
+# test_calculator.py
 
-class TestCalculatorFunctions(unittest.TestCase):
+import pytest
+from calculator import CalculatorApp  # assuming the code is in calculator.py
 
-    def test_add(self):
-        self.assertEqual(calculator.add(2, 3), 5)
-        self.assertEqual(calculator.add(-1, 1), 0)
-        self.assertEqual(calculator.add(0, 0), 0)
+@pytest.fixture
+def app():
+    return CalculatorApp()
 
-    def test_subtract(self):
-        self.assertEqual(calculator.subtract(5, 3), 2)
-        self.assertEqual(calculator.subtract(1, 1), 0)
-        self.assertEqual(calculator.subtract(0, 0), 0)
+def test_build(app):
+    # Test that the build method returns a BoxLayout
+    assert isinstance(app.build(), BoxLayout)
 
-    # Similarly, write test methods for other functions...
+def test_on_button_press(app, monkeypatch):
+    # Test that the on_button_press method updates the solution text
+    app.solution.text = "10"
+    button = Button(text="+")
+    app.on_button_press(button)
+    assert app.solution.text == "10+"
 
-if __name__ == '__main__':
-    unittest.main()
+    # Test that the on_button_press method clears the solution text when "C" is pressed
+    app.solution.text = "10+20"
+    button = Button(text="C")
+    app.on_button_press(button)
+    assert app.solution.text == ""
+
+    # Test that the on_button_press method doesn't add an operator if the last button was an operator
+    app.solution.text = "10+"
+    button = Button(text="-")
+    app.on_button_press(button)
+    assert app.solution.text == "10+"
+
+    # Test that the on_button_press method doesn't add an operator if the current text is "0"
+    app.solution.text = "0"
+    button = Button(text="+")
+    app.on_button_press(button)
+    assert app.solution.text == "0"
+
+def test_on_solution(app, monkeypatch):
+    # Test that the on_solution method calculates the solution correctly
+    app.solution.text = "10+20"
+    button = Button(text="=")
+    app.on_solution(button)
+    assert app.solution.text == "30"
+
+    # Test that the on_solution method handles errors correctly
+    app.solution.text = "10/0"
+    button = Button(text="=")
+    app.on_solution(button)
+    assert app.solution.text == "Error"
+
+def test_calculate(app):
+    # Test that the calculate method evaluates the expression correctly
+    assert app.calculate("10+20") == 30
+
+    # Test that the calculate method handles errors correctly
+    assert app.calculate("10/0") == "Error"
