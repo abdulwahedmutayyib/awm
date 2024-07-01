@@ -1,2 +1,4 @@
 kivy
+flake8
 pytest
+coverage
