@@ -1,104 +1,65 @@
-import sys
-print(sys.path)
-
 import math
+from kivy.app import App
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
+from kivy.uix.textinput import TextInput
 
-def add(x, y):
-    return x + y
-
-def subtract(x, y):
-    return x - y
-
-def multiply(x, y):
-    return x * y
-
-def divide(x, y):
-    if y != 0:
-        return x / y
-    else:
-        return "Cannot divide by zero"
-
-def square_root(x):
-    if x >= 0:
-        return math.sqrt(x)
-    else:
-        return "Invalid input"
-
-def exponentiation(x, y):
-    return x ** y
-
-def sine(x):
-    return math.sin(math.radians(x))
-
-def cosine(x):
-    return math.cos(math.radians(x))
-
-def tangent(x):
-    return math.tan(math.radians(x))
-
-
-import math
-from PyQt5.QtWidgets import QApplication, QMainWindow, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLineEdit, QLabel
-
-class CalculatorApp(QMainWindow):
-    def __init__(self):
-        super().__init__()
-
-        self.setWindowTitle("Calculator")
-        self.setGeometry(100, 100, 400, 300)
-
-        main_widget = QWidget(self)
-        self.setCentralWidget(main_widget)
-
-        layout = QVBoxLayout()
-        main_widget.setLayout(layout)
-
-        self.result_display = QLineEdit()
-        layout.addWidget(self.result_display)
-
-        button_layout = [
-            ["7", "8", "9", "+"],
-            ["4", "5", "6", "-"],
-            ["1", "2", "3", "*"],
-            ["0", ".", "=", "/"],
-            ["sqrt", "x^y", "sin", "cos", "tan"]
+class CalculatorApp(App):
+    def build(self):
+        self.operators = ["/", "*", "+", "-"]
+        self.last_was_operator = None
+        self.last_button = None
+        main_layout = BoxLayout(orientation="vertical")
+        self.solution = TextInput(
+            multiline=False, readonly=True, halign="right", font_size=55
+        )
+        main_layout.add_widget(self.solution)
+        buttons = [
+            ["7", "8", "9", "/"],
+            ["4", "5", "6", "*"],
+            ["1", "2", "3", "-"],
+            [".", "0", "C", "+"],
+            ["sqrt", "x^y", "sin", "cos", "tan"],
         ]
-
-        for row in button_layout:
-            row_widget = QWidget()
-            row_layout = QHBoxLayout()
-            row_widget.setLayout(row_layout)
-
+        for row in buttons:
+            h_layout = BoxLayout()
             for label in row:
-                button = QPushButton(label)
-                button.clicked.connect(self.handle_button_click)
-                row_layout.addWidget(button)
+                button = Button(
+                    text=label,
+                    pos_hint={"center_x": 0.5, "center_y": 0.5},
+                )
+                button.bind(on_press=self.on_button_press)
+                h_layout.add_widget(button)
+            main_layout.add_widget(h_layout)
+        equals_button = Button(
+            text="=", pos_hint={"center_x": 0.5, "center_y": 0.5}
+        )
+        equals_button.bind(on_press=self.on_solution)
+        main_layout.add_widget(equals_button)
+        return main_layout
 
-            layout.addWidget(row_widget)
-
-        self.current_input = ""
-
-    def handle_button_click(self):
-        clicked_button = self.sender()
-        clicked_text = clicked_button.text()
-
-        if clicked_text == "=":
-            try:
-                result = self.calculate(self.current_input)
-                self.result_display.setText(str(result))
-                self.current_input = str(result)
-            except Exception as e:
-                self.result_display.setText("Error")
-        elif clicked_text == "sqrt":
-            try:
-                result = self.calculate("sqrt(" + self.current_input + ")")
-                self.result_display.setText(str(result))
-                self.current_input = str(result)
-            except Exception as e:
-                self.result_display.setText("Error")
+    def on_button_press(self, instance):
+        current = self.solution.text
+        button_text = instance.text
+        if button_text == "C":
+            self.solution.text = ""
         else:
-            self.current_input += clicked_text
-            self.result_display.setText(self.current_input)
+            if current and (
+                self.last_was_operator and button_text in self.operators):
+                return
+            elif current == "0" and button_text in self.operators:
+                return
+            else:
+                new_text = current + button_text
+                self.solution.text = new_text
+        self.last_button = button_text
+        self.last_was_operator = self.last_button in self.operators
+
+    def on_solution(self, instance):
+        text = self.solution.text
+        if text:
+            solution = self.calculate(text)
+            self.solution.text = str(solution)
 
     def calculate(self, expression):
         try:
@@ -107,7 +68,5 @@ class CalculatorApp(QMainWindow):
             return "Error"
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    calculator_app = CalculatorApp()
-    calculator_app.show()
-    sys.exit(app.exec_())
+    app = CalculatorApp()
+    app.run()
