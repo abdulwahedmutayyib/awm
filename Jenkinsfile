@@ -38,8 +38,8 @@ pipeline {
     stage('Build Docker Image') {
       steps {
         script {
-          docker.withRegistry('https://your-docker-registry.com', credentialsId: 'docker_hub_credentials') { // Replace details
-            def imageName = 'your_image_name:latest' // Replace with your image name
+          docker.withRegistry('https://hub.docker.com/', credentialsId: 'ecb850b0-9a99-42c2-8786-5dc858d67221') { // Replace details
+            def imageName = 'python:latest' // Replace with your image name
             sh "docker build -t $imageName ."
           }
         }
