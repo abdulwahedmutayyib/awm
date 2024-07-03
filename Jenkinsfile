@@ -1,7 +1,7 @@
 pipeline {
   agent {
     node {
-      label 'agentr2'
+      label 'Docker'
       customWorkspace '/home/jenkins/workspace'
     }
   }
