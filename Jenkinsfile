@@ -1,10 +1,5 @@
 pipeline {
-  agent {
-    node {
-      label 'Docker'
-      customWorkspace '/home/jenkins/workspace'
-    }
-  }
+  agent any
 
   environment {
     RESET_STAGE = '' // Initially empty
@@ -23,7 +18,7 @@ pipeline {
     }
     stage('Checkout Code') {
       steps {
-        git branch: 'master',
+        git branch: 'aster',
           url: 'https://github.com/abdulwahedmutayyib/awm.git' // Replace with your repository URL
       }
     }
@@ -40,7 +35,7 @@ pipeline {
         script {
           docker.withRegistry('https://hub.docker.com/', credentialsId: 'ecb850b0-9a99-42c2-8786-5dc858d67221') { // Replace details
             def imageName = 'python:latest' // Replace with your image name
-            sh "docker build -t $imageName ."
+            sh "docker build -t $imageName."
           }
         }
       }
@@ -82,13 +77,14 @@ pipeline {
         )
       }
     }
-    stage('Deploy to Server') {
-      steps {
-        script {
-          sh 'cp -r dist/* user@server.com:/path/to/deployment/directory' // Replace with your details (assuming build output in dist/)
-        }
-      }
-    }
+    // Commented out: Deploy to Server
+    // stage('Deploy to Server') {
+    //   steps {
+    //     script {
+    //       sh 'cp -r dist/* user@server.com:/path/to/deployment/directory' // Replace with your details (assuming build output in dist/)
+    //     }
+    //   }
+    // }
   }
 
   // Set post-conditions (optional):
@@ -107,4 +103,3 @@ pipeline {
     }
   }
 }
-
