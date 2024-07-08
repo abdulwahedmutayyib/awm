@@ -19,26 +19,23 @@ sandbox {
       }
       stage('Checkout Code') {
         steps {
-          git branch: 'aster',
+          git branch: 'master',
             url: 'https://github.com/abdulwahedmutayyib/awm.git' // Replace with your repository URL
         }
       }
       stage('Install Dependencies') {
         steps {
           script {
-            // Use approved steps instead of sh
-            bat 'pip install -r requirements.txt' 
+            sh 'pip install -r requirements.txt' 
           }
         }
       }
-      // New Stage: Build Docker Image
       stage('Build Docker Image') {
         steps {
           script {
-            docker.withRegistry('https://hub.docker.com/', credentialsId: 'ecb850b0-9a99-42c2-8786-5dc858d67221') { // Replace details
-              def imageName = 'python:latest' // Replace with your image name
-              // Use approved steps instead of sh
-              bat "docker build -t $imageName."
+            docker.withRegistry('https://hub.docker.com/', credentialsId: 'ecb850b0-9a99-42c2-8786-5dc858d67221') { 
+              def imageName = 'python:latest' 
+              sh "docker build -t ${imageName} ." 
             }
           }
         }
@@ -46,14 +43,13 @@ sandbox {
       stage('Static Code Analysis') {
         steps {
           script {
-            // Use approved steps instead of sh
-            bat 'pip install flake8' // Install Flake8
-            bat 'flake8.'     // Execute Flake8 on your Python code
+            sh 'pip install flake8' 
+            sh 'flake8 .'     
           }
         }
         post {
           always {
-            warningsNG(regions: '**/*.py', // Analyze Python files
+            warningsNG(regions: '**/*.py', 
                         failedTotal: 'high',
                         unstableTotal: 'low')
           }
@@ -62,18 +58,16 @@ sandbox {
       stage('Test Code') {
         steps {
           script {
-            // Use approved steps instead of sh
-            bat 'pytest' // Execute Pytest (assuming you use Pytest)
+            sh 'pytest' 
           }
         }
       }
       stage('Code Coverage Analysis') {
         steps {
           script {
-            // Use approved steps instead of sh
-            bat 'coverage run -m pytest && coverage report' // Example with coverage.py
+            sh 'coverage run -m pytest && coverage report' 
           }
-          publisher coberturaReport( // Publish coverage report
+          publisher coberturaReport( 
                     onlyStableBuilds: true,
                     failNoReports: true,
                     failUnhealthy: true,
@@ -82,3 +76,20 @@ sandbox {
                     zoomCoverageChart: true
           )
         }
+      }
+    }
+
+    post {
+      always {
+        script {
+          env.RESET_STAGE = '' // Reset RESET_STAGE to an empty string after all stages (or on success)
+        }
+      }
+      failure {
+        script {
+          env.RESET_STAGE = 'true' // Set RESET_STAGE to a flag value on failure
+        }
+      }
+    }
+  }
+}
