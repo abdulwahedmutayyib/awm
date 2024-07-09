@@ -33,7 +33,7 @@ sandbox {
       stage('Build Docker Image') {
         steps {
           script {
-            docker.withRegistry('https://hub.docker.com/', credentialsId: 'ecb850b0-9a99-42c2-8786-5dc858d67221') { 
+            docker.withRegistry('https://hub.docker.com/', credentialsId: 'docker-credential') { 
               def imageName = 'python:latest' 
               sh "docker build -t ${imageName} ." 
             }
