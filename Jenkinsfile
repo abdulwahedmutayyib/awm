@@ -1,112 +1,50 @@
 pipeline {
     agent any
 
-    environment {
-        RESET_STAGE = false // Initialize to false
-        PYENV_VERSION = '3.8.12' // Specify the Python version to use
-    }
-
     stages {
-        stage('Reset Check') {
-            steps {
-                script {
-                    if (env.RESET_STAGE == 'true') {
-                        echo "Stages reset. Skipping remaining stages."
-                        return
-                    }
-                }
-            }
-        }
         stage('Checkout Code') {
             steps {
-                git branch: 'master',
-                    url: 'https://github.com/abdulwahedmutayyib/awm.git'
-            }
-        }
-        stage('Install Dependencies') {
-            steps {
-                script {
-                    pyenvPython(PYENV_VERSION) {
-                        sh 'pip install -r requirements.txt'
-                    }
-                }
+                git branch: 'master', credentialsId: 'your-github-credentials-id', url: ''
             }
         }
         stage('Build Docker Image') {
             steps {
-                script {
-                    pyenvPython(PYENV_VERSION) {
-                        docker.withRegistry('https://hub.docker.com/', credentialsId: 'docker-credential') {
-                            def imageName = 'python:latest'
-                            sh "docker build -t ${imageName} ."
-                        }
-                    }
-                }
+                sh 'docker build -t my-calculator-app ./'
+            }
+        }
+        stage('Run Tests') {
+            steps {
+                sh '''
+                    docker run my-calculator-app pytest --cov=calculator --cov-report html
+                '''
             }
         }
         stage('Static Code Analysis') {
             steps {
-                script {
-                    pyenvPython(PYENV_VERSION) {
-                        sh 'pip install flake8'
-                        sh 'flake8 .'
-                    }
-                }
-            }
-            post {
-                always {
-                    warningsNG(regions: '**/*.py',
-                                failedTotal: 'high',
-                                unstableTotal: 'low')
-                }
+                sh '''
+                    docker run my-calculator-app flake8 .
+                    docker run my-calculator-app pycodestyle .
+                '''
             }
         }
-        stage('Test Code') {
+        stage('Coverage Report') {
             steps {
-                script {
-                    pyenvPython(PYENV_VERSION) {
-                        sh 'pytest'
-                    }
-                }
+                archiveArtifacts artifacts: '**/*.html', fingerprint: true, followSymlinks: false
             }
         }
-        stage('Code Coverage Analysis') {
-            steps {
-                script {
-                    pyenvPython(PYENV_VERSION) {
-                        // Run pytest with coverage
-                        sh 'pytest --cov=calculator --cov-report=xml'
-                    }
-                }
-                post {
-                    always {
-                        publish {
-                            coberturaReport(
-                                coberturaReportFile: '**/coverage.xml', // Adjust this based on your coverage report file path
-                                onlyStableBuilds: true,
-                                failNoReports: true,
-                                failUnhealthy: true,
-                                autoUpdateHealth: false,
-                                autoUpdateStability: false,
-                                zoomCoverageChart: true
-                            )
-                        }
-                    }
-                }
-            }
+        stage('Deploy (Optional)') {
+            // Implement deployment logic to your desired environment (e.g., AWS Lambda, EC2 instance)
         }
     }
 
     post {
         always {
-            script {
-                env.RESET_STAGE = false // Reset RESET_STAGE to false after all stages (or on success)
-            }
+            cleanWs()
+        }
+        success {
+            emailext body: 'CI/CD Pipeline Successful!', subject: 'Calculator App Build Successful', to: 'awahedmutayyib@gmail.com'
         }
         failure {
-            script {
-                env.RESET_STAGE = 'true' // Set RESET_STAGE to 'true' on failure
-            }
+            emailext body: 'CI/CD Pipeline Failed!', subject: 'Calculator App Build Failed', to: 'awahedmutayyib@gmail.com'
         }
     }
-}
