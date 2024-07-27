@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout Code') {
             steps {
-                git branch: 'master', credentialsId: 'your-github-credentials-id', url: ''
+                git branch: 'master', credentialsId: 'your-github-credentials-id', url: 'https://github.com/abdulwahedmutayyib/awm.git'
             }
         }
         stage('Build Docker Image') {
