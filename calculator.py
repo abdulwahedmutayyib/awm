@@ -61,7 +61,9 @@ class CalculatorApp(App):
             self.solution.text = current + "x^y"
 
         else:
-            if current and (self.last_was_operator and button_text in self.operators):
+            if current and (
+                    self.last_was_operator and button_text in self.operators
+                    ):
                 return
             elif current == "0" and button_text in self.operators:
                 return
