@@ -1,0 +1,20 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Virtual env
+venv/
+.env
+
+# Build files
+build/
+dist/
+
+# Coverage reports
+.coverage
+htmlcov/
+
+# OS files
+.DS_Store
+Thumbs.db
+
