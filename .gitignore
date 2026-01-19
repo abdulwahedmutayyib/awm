@@ -9,10 +9,15 @@ venv/
 # Build files
 build/
 dist/
+reports/
 
-# Coverage reports
+# Test & coverage reports
 .coverage
 htmlcov/
+*.xml
+
+# PyInstaller
+*.spec
 
 # OS files
 .DS_Store
