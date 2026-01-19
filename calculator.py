@@ -1,8 +1,8 @@
-import math
 from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.textinput import TextInput
+from logic import calculate   # import logic engine
 
 class CalculatorApp(App):
     def build(self):
@@ -61,11 +61,10 @@ class CalculatorApp(App):
             solution = self.calculate(text)
             self.solution.text = str(solution)
 
+    
     def calculate(self, expression):
-        try:
-            return eval(expression)
-        except Exception as e:
-            return "Error"
+    return calculate(expression)
+ 
 
 if __name__ == "__main__":
     app = CalculatorApp()
