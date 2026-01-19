@@ -39,21 +39,31 @@ class CalculatorApp(App):
         return main_layout
 
     def on_button_press(self, instance):
-        current = self.solution.text
-        button_text = instance.text
-        if button_text == "C":
-            self.solution.text = ""
+    current = self.solution.text
+    button_text = instance.text
+
+    if button_text == "C":
+        self.solution.text = ""
+
+    elif button_text in ["sqrt", "sin", "cos", "tan"]:
+        # append function format: sqrt( , sin( , etc
+        self.solution.text = current + f"{button_text}("
+
+    elif button_text == "x^y":
+        # replace with power operator
+        self.solution.text = current + "x^y"
+
+    else:
+        if current and (self.last_was_operator and button_text in self.operators):
+            return
+        elif current == "0" and button_text in self.operators:
+            return
         else:
-            if current and (
-                self.last_was_operator and button_text in self.operators):
-                return
-            elif current == "0" and button_text in self.operators:
-                return
-            else:
-                new_text = current + button_text
-                self.solution.text = new_text
-        self.last_button = button_text
-        self.last_was_operator = self.last_button in self.operators
+            self.solution.text = current + button_text
+
+    self.last_button = button_text
+    self.last_was_operator = self.last_button in self.operators
+
 
     def on_solution(self, instance):
         text = self.solution.text
