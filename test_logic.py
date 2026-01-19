@@ -31,4 +31,3 @@ def test_sin():
 
 def test_error():
     assert calculate("10/0") == "Error"
-

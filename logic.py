@@ -12,5 +12,3 @@ def calculate(expr):
         return eval(expr, {"math": math})
     except Exception:
         return "Error"
-
-
