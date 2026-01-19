@@ -1,5 +1,6 @@
 import math
 
+
 def calculate(expr):
     try:
         expr = expr.replace("x^y", "**")
@@ -8,8 +9,8 @@ def calculate(expr):
         expr = expr.replace("cos", "math.cos")
         expr = expr.replace("tan", "math.tan")
 
-        # Safe eval environment
         return eval(expr, {"math": math})
-    except:
+    except Exception:
         return "Error"
+
 
